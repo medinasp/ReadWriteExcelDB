@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Read Files</h1>
+<br><br />
+<h4>Formato Texto</h4>
+<p>@foreach (var line in ViewBag.LinesText)
+    {
+        <p>@line</p>
+    }
+</p>
+<br />
+
+<h4>Formato Excel</h4>
+<p>@foreach (var line in ViewBag.Lines)
+    {
+            <p>@line</p>
+    }
+</p>
