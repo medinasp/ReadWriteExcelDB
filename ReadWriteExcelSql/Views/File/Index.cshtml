@@ -1,21 +1,94 @@
-﻿
+﻿@model List<ReadWriteExcelSql.Models.ViewModels.ExcelDataViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Read Files</h1>
-<br><br />
+@*<h1>Read Files</h1>
+<br>
 <h4>Formato Texto</h4>
 <p>@foreach (var line in ViewBag.LinesText)
     {
         <p>@line</p>
     }
 </p>
-<br />
+<br />*@
 
+@*
 <h4>Formato Excel</h4>
 <p>@foreach (var line in ViewBag.Lines)
     {
             <p>@line</p>
     }
 </p>
+<br /><br />
+<div class="row">
+    <form method="post" asp-controller="File" class="text-left form-validate">
+        <h3>Excel Importado</h3>
+        <table class = "table table-active table-bordered" width="100">
+            <thead>
+                <tr>
+                    <th>Coluna 1</th>
+                    <th>Coluna 2</th>
+                    <th>Coluna 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int x = 0;}
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td></td>
+                           @Html.DisplayFor(modelItem => item.valores)
+                        teste
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>*@
+
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align:center;
+  padding: 8px;
+}
+
+.mouse:hover {
+  background-color: gray; color:white;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+</style>
+
+    <div class="row">
+    <form method="post" asp-controller="File" class="text-left form-validate">
+        <h3>Excel Importado</h3>
+        <table>
+            <thead style = "background-color: gray; color:white; text-align:center !important">
+                <tr>
+                    @for (int i = 0; i < Model[0].valores.Count; i++)
+                    {
+                                <th style = "text-align:center;">Coluna@(i + 1)</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                        <tr  class="mouse" style="table:table-striped">
+                        @foreach (var value in item.valores)
+                        {
+                                    <td>@value</td>
+                        }
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

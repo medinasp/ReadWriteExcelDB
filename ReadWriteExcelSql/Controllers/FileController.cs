@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReadWriteExcelSql.Models.ViewModels;
 using OfficeOpenXml;
 
 namespace ReadWriteExcelSql.Controllers
@@ -7,6 +8,7 @@ namespace ReadWriteExcelSql.Controllers
     {
         public IActionResult Index()
         {
+            List<ExcelDataViewModel> model = new List<ExcelDataViewModel>();
             string pathtext = @"C:\1A\file1.txt";
             List<string> linesText = new List<string>();
 
@@ -30,7 +32,8 @@ namespace ReadWriteExcelSql.Controllers
 
 
             string path = @"C:\1A\TemplateDefinicaoDosSonhos.xlsx";
-            List<string> lines = new List<string>();
+            //            List<string> lines = new List<string>();
+            List<ExcelDataViewModel> lines = new List<ExcelDataViewModel>();
             try
             {
                 using (var package = new ExcelPackage(new FileInfo(path)))
@@ -41,13 +44,15 @@ namespace ReadWriteExcelSql.Controllers
                     int colCount = worksheet.Dimension.Columns;
                     for (int row = 1; row <= rowCount; row++)
                     {
-                        string line = "";
+                        ExcelDataViewModel excelDataViewModel = new ExcelDataViewModel();
                         for (int col = 1; col <= colCount; col++)
                         {
                             var cellValue = worksheet.Cells[row, col].Value;
-                            line += (cellValue ?? "").ToString() + " ";
+                            excelDataViewModel.valores.Add((cellValue ?? "").ToString());
+//                            line += (cellValue ?? "").ToString() + " ";
                         }
-                        lines.Add(line);
+                        //lines.Add(line);
+                        lines.Add(excelDataViewModel);
                     }
                 }
             }
@@ -58,7 +63,7 @@ namespace ReadWriteExcelSql.Controllers
             }
 
             ViewBag.Lines = lines;
-            return View();
+            return View(lines);
 
         }
     }
