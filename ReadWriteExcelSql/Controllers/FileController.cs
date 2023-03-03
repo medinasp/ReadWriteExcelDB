@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReadWriteExcelSql.Models.ViewModels;
+using ReadWriteExcelSql.Models;
 using OfficeOpenXml;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Cryptography;
 
 namespace ReadWriteExcelSql.Controllers
 {
@@ -65,6 +69,77 @@ namespace ReadWriteExcelSql.Controllers
             ViewBag.Lines = lines;
             return View(lines);
 
+        }
+
+        // [HttpPost]
+        //public ActionResult ImportDb(List<ExcelDataViewModel> model)
+        //{
+        //    var list = new List<UpExcel>();
+        //    var totalLines = new List<UpExcel>();
+        //    ExcelDataViewModel excelDataViewModel = new ExcelDataViewModel();
+
+        //    foreach (var excelUp in model)
+        //    {
+        //        foreach (var value in excelUp.valores)
+        //        {
+        //            //for (var cont = 1; cont < excelDataViewModel[0].valores.Count; cont++)
+        //            //{
+        //            //    list.Add(new UpExcel
+        //            //    {
+        //            //        Col1 = value
+        //            //    });
+
+        //            //}
+        //        }
+        //    }
+
+        //    using (var context = new ContextBase())
+        //    {
+        //        context.UpExcels.AddRange(list);
+        //        context.SaveChanges();
+        //        totalLines = context.UpExcels.ToList();
+        //    }
+
+        //    return View();
+        //}
+
+        [HttpPost]
+        public ActionResult ImportDb(string[][] recebida)
+        {
+            List<UpExcel> upExcels = new List<UpExcel>();
+
+            for (int i = 0; i < recebida.Length; i++)
+            {
+                UpExcel upExcel = new UpExcel();
+
+                for (int j = 0; j < recebida[i].Length; j++)
+                {
+                    if (j == 0)
+                    {
+                        upExcel.Col1 = recebida[i][j];
+                    }
+                    else if (j == 1)
+                    {
+                        upExcel.Col2 = recebida[i][j];
+                    }
+                    else if (j == 2)
+                    {
+                        upExcel.Col3 = recebida[i][j];
+                    }
+                    else if (j == 3)
+                    {
+                        upExcel.Col4 = recebida[i][j];
+                    }
+                }
+
+                upExcels.Add(upExcel);
+            }
+
+            // Salva a lista no banco de dados
+            //_context.UpExcels.AddRange(upExcels);
+            //_context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

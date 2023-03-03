@@ -66,8 +66,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
 </style>
 
-    <div class="row">
-    <form method="post" asp-controller="File" class="text-left form-validate">
+<div class="row">
+    <form method="post" asp-controller="File" asp-action="ImportDb" class="text-left form-validate">
         <h3>Excel Importado</h3>
         <table>
             <thead style = "background-color: gray; color:white; text-align:center !important">
@@ -79,16 +79,27 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 </tr>
             </thead>
             <tbody>
+                @{ int ic = 0;}
                 @foreach (var item in Model)
                 {
                         <tr  class="mouse" style="table:table-striped">
-                        @foreach (var value in item.valores)
+                        @for (int i = 0; i < item.valores.Count; i++)
                         {
-                                    <td>@value</td>
+                                   @* <td>@value</td>*@
+                                    @*<td><input asp-for="@value" name="Model.ExcelDataViewModel[@ic].valores[]" class="form-control"></td>*@
+                                    @*<td><input name="recebida[]" class="form-control" value="@value" /></td>*@
+                                    <td>
+                                        <input type="hidden" name="ic" value="@ic" />
+                                        <input type="hidden" name="col" value="@i" />
+                                        <input name="recebida[@i][@ic]" class="form-control" value="@item.valores[i]" /></td>
+
                         }
                         </tr>
                 }
             </tbody>
         </table>
+        <div class="form-group col-sm-6">
+            <button type="submit" class="btn btn-primary">Import Excel File</button>
+        </div>
     </form>
 </div>
