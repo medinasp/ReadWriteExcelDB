@@ -5,6 +5,7 @@ using OfficeOpenXml;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace ReadWriteExcelSql.Controllers
 {
@@ -104,11 +105,11 @@ namespace ReadWriteExcelSql.Controllers
         //}
 
         [HttpPost]
-        public ActionResult ImportDb(string[][] recebida)
+        public ActionResult ImportDb(string[][] recebida, int totalLinhas)
         {
             List<UpExcel> upExcels = new List<UpExcel>();
 
-            for (int i = 0; i < recebida.Length; i++)
+            for (int i = 0; i < totalLinhas; i++)
             {
                 UpExcel upExcel = new UpExcel();
 
@@ -135,11 +136,14 @@ namespace ReadWriteExcelSql.Controllers
                 upExcels.Add(upExcel);
             }
 
-            // Salva a lista no banco de dados
-            //_context.UpExcels.AddRange(upExcels);
-            //_context.SaveChanges();
+            using (var context = new ContextBase())
+            {
+                context.UpExcels.AddRange(upExcels);
+                context.SaveChanges();
+            }
 
             return RedirectToAction("Index");
         }
     }
+
 }

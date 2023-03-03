@@ -69,6 +69,44 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 <div class="row">
     <form method="post" asp-controller="File" asp-action="ImportDb" class="text-left form-validate">
         <h3>Excel Importado</h3>
+        <input type="hidden" name="totalLinhas" value="@Model.Count" />
+        <table>
+            <thead style = "background-color: gray; color:white; text-align:center !important">
+                <tr>
+                    @for (int i = 0; i < Model[0].valores.Count; i++)
+                    {
+                            <th style = "text-align:center;">Coluna@(i + 1)</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int ic = 0;
+                }
+                @foreach (var item in Model)
+                {
+                        <tr  class="mouse" style="table:table-striped">
+                        @for (int i = 0; i < item.valores.Count; i++)
+                        {
+                                    <td>
+                                        <input name="recebida[@ic][@i]" class="form-control" value="@item.valores[i]" />
+                                    </td>
+                        }
+                        </tr>
+                    ic++;
+                }
+            </tbody>
+        </table>
+        <div class="form-group col-sm-6">
+            <button type="submit" class="btn btn-primary">Import Excel File</button>
+        </div>
+    </form>
+</div>
+
+
+@*<div class="row">
+    <form method="post" asp-controller="File" asp-action="ImportDb" class="text-left form-validate">
+        <h3>Excel Importado</h3>
         <table>
             <thead style = "background-color: gray; color:white; text-align:center !important">
                 <tr>
@@ -88,9 +126,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                    @* <td>@value</td>*@
                                     @*<td><input asp-for="@value" name="Model.ExcelDataViewModel[@ic].valores[]" class="form-control"></td>*@
                                     @*<td><input name="recebida[]" class="form-control" value="@value" /></td>*@
-                                    <td>
-                                        <input type="hidden" name="ic" value="@ic" />
-                                        <input type="hidden" name="col" value="@i" />
+@*                                    <td>
                                         <input name="recebida[@i][@ic]" class="form-control" value="@item.valores[i]" /></td>
 
                         }
@@ -102,4 +138,5 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             <button type="submit" class="btn btn-primary">Import Excel File</button>
         </div>
     </form>
-</div>
+</div>*@
+
