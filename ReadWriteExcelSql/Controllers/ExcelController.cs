@@ -15,18 +15,6 @@ namespace ReadWriteExcelSql.Controllers
             _service = service;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult ReadTextFile(string path)
-        {
-            var lines = _service.ReadTextFile(path);
-            return Json(lines);
-        }
-
         public IActionResult ReadExcelFile()
         {
             var lines = _service.ReadExcelFile();

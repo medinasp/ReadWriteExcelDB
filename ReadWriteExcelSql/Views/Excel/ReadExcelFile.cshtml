@@ -21,6 +21,7 @@ th, td {
 tr:nth-child(even) {background-color: #f2f2f2;}
 
 </style>
+
 <div class="row">
     <form method="post" asp-controller="Excel" asp-action="SaveToDatabase" class="text-left form-validate">
         <h3>Excel Importado</h3>
@@ -40,7 +41,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         }
                         @foreach (var item in Model)
                         {
-                            <tr  class="mouse" style="table:table-striped">
+                            <tr  class="mouse">
                                 @for (int i = 0; i < item.valores.Count; i++)
                                 {
                                             <td>

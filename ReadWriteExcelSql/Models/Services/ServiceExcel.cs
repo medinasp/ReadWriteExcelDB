@@ -10,30 +10,6 @@ namespace ReadWriteExcelSql.Models.Services
 {
     public class ServiceExcel : IServiceExcel
     {
-        public List<string> ReadTextFile(string path)
-        {
-            List<string> linesText = new List<string>();
-
-            try
-            {
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    while (!sr.EndOfStream)
-                    {
-                        string linetxt = sr.ReadLine();
-                        linesText.Add(linetxt);
-                    }
-                }
-            }
-            catch (IOException erro)
-            {
-                Console.WriteLine("Deu erro");
-                Console.WriteLine(erro.Message);
-            }
-
-            return linesText;
-        }
-
         public List<ExcelDataViewModel> ReadExcelFile()
         {
             string path = @"C:\1A\TemplateDefinicaoDosSonhos.xlsx";
