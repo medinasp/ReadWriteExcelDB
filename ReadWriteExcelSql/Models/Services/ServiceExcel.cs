@@ -1,52 +1,44 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ReadWriteExcelSql.Models.Interfaces;
 using ReadWriteExcelSql.Models.ViewModels;
-using ReadWriteExcelSql.Models;
-using OfficeOpenXml;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Security.Cryptography;
+using System;
 using System.Collections.Generic;
-using ReadWriteExcelSql.Models.Interfaces;
+using System.IO;
+using System.Linq;
+using OfficeOpenXml;
 
-namespace ReadWriteExcelSql.Controllers
+namespace ReadWriteExcelSql.Models.Services
 {
-    public class FileController : Controller
+    public class ServiceExcel : IServiceExcel
     {
-        //private readonly IServiceExcel _IServiceExcel;
-
-        //public FileController(IServiceExcel IServiceExcel)
-        //{
-        //    _IServiceExcel = IServiceExcel;
-        //}
-
-        public IActionResult Index()
+        public List<string> ReadTextFile(string path)
         {
-            List<ExcelDataViewModel> model = new List<ExcelDataViewModel>();
-            string pathtext = @"C:\1A\file1.txt";
             List<string> linesText = new List<string>();
 
             try
             {
-               using (StreamReader sr = new StreamReader(pathtext))
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    while (!sr.EndOfStream)
                     {
-                        while (!sr.EndOfStream)
-                        {
-                            string linetxt = sr.ReadLine();
-                            linesText.Add(linetxt);
-                        }
+                        string linetxt = sr.ReadLine();
+                        linesText.Add(linetxt);
                     }
+                }
             }
-            catch(IOException erro)
+            catch (IOException erro)
             {
                 Console.WriteLine("Deu erro");
                 Console.WriteLine(erro.Message);
             }
-            ViewBag.linesText = linesText;
 
+            return linesText;
+        }
 
+        public List<ExcelDataViewModel> ReadExcelFile()
+        {
             string path = @"C:\1A\TemplateDefinicaoDosSonhos.xlsx";
-            //            List<string> lines = new List<string>();
             List<ExcelDataViewModel> lines = new List<ExcelDataViewModel>();
+
             try
             {
                 using (var package = new ExcelPackage(new FileInfo(path)))
@@ -55,16 +47,17 @@ namespace ReadWriteExcelSql.Controllers
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                     int rowCount = worksheet.Dimension.Rows;
                     int colCount = worksheet.Dimension.Columns;
+
                     for (int row = 1; row <= rowCount; row++)
                     {
                         ExcelDataViewModel excelDataViewModel = new ExcelDataViewModel();
+
                         for (int col = 1; col <= colCount; col++)
                         {
                             var cellValue = worksheet.Cells[row, col].Value;
                             excelDataViewModel.valores.Add((cellValue ?? "").ToString());
-//                            line += (cellValue ?? "").ToString() + " ";
                         }
-                        //lines.Add(line);
+
                         lines.Add(excelDataViewModel);
                     }
                 }
@@ -75,45 +68,10 @@ namespace ReadWriteExcelSql.Controllers
                 Console.WriteLine(erro.Message);
             }
 
-            ViewBag.Lines = lines;
-            return View(lines);
-
+            return lines;
         }
 
-        // [HttpPost]
-        //public ActionResult ImportDb(List<ExcelDataViewModel> model)
-        //{
-        //    var list = new List<UpExcel>();
-        //    var totalLines = new List<UpExcel>();
-        //    ExcelDataViewModel excelDataViewModel = new ExcelDataViewModel();
-
-        //    foreach (var excelUp in model)
-        //    {
-        //        foreach (var value in excelUp.valores)
-        //        {
-        //            //for (var cont = 1; cont < excelDataViewModel[0].valores.Count; cont++)
-        //            //{
-        //            //    list.Add(new UpExcel
-        //            //    {
-        //            //        Col1 = value
-        //            //    });
-
-        //            //}
-        //        }
-        //    }
-
-        //    using (var context = new ContextBase())
-        //    {
-        //        context.UpExcels.AddRange(list);
-        //        context.SaveChanges();
-        //        totalLines = context.UpExcels.ToList();
-        //    }
-
-        //    return View();
-        //}
-
-        [HttpPost]
-        public ActionResult ImportDb(string[][] recebida, int totalLinhas)
+        public void SaveToDatabase(string[][] recebida, int totalLinhas)
         {
             List<UpExcel> upExcels = new List<UpExcel>();
 
@@ -149,9 +107,6 @@ namespace ReadWriteExcelSql.Controllers
                 context.UpExcels.AddRange(upExcels);
                 context.SaveChanges();
             }
-
-            return RedirectToAction("Index");
         }
     }
-
 }

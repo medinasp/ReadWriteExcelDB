@@ -1,0 +1,59 @@
+﻿@model List<ReadWriteExcelSql.Models.ViewModels.ExcelDataViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align:center;
+  padding: 8px;
+}
+
+.mouse:hover {
+  background-color: gray; color:white;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+</style>
+<div class="row">
+    <form method="post" asp-controller="Excel" asp-action="SaveToDatabase" class="text-left form-validate">
+        <h3>Excel Importado</h3>
+        <input type="hidden" name="totalLinhas" value="@Model.Count" />
+        <table>
+            <thead style = "background-color: gray; color:white; text-align:center !important">
+                <tr>
+                            @for (int i = 0; i < Model[0].valores.Count; i++)
+                            {
+                                <th style = "text-align:center;">Coluna@(i + 1)</th>
+                            }
+                </tr>
+            </thead>
+            <tbody>
+                        @{
+                            int ic = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr  class="mouse" style="table:table-striped">
+                                @for (int i = 0; i < item.valores.Count; i++)
+                                {
+                                            <td>
+                                                <input name="recebida[@ic][@i]" class="form-control" value="@item.valores[i]" />
+                                            </td>
+                                }
+                            </tr>
+                            ic++;
+                        }
+            </tbody>
+        </table>
+        <div class="form-group col-sm-6">
+            <button type="submit" class="btn btn-primary">Import Excel File</button>
+        </div>
+    </form>
+</div>
